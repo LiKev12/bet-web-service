@@ -82,6 +82,7 @@ public interface TaskRepository extends JpaRepository<TaskEntity, UUID> {
             "        ELSE TRUE\n" +
             "    END = :filterIsNotPin)\n" +
             "ORDER BY isComplete ASC, sortByTimestamp DESC")
+
     List<TaskDTO> getTasksPersonal(
             String idUser,
             @Param("filterText") String filterText,
