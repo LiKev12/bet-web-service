@@ -16,10 +16,10 @@ public class PodEntity {
     private UUID id;
 
     @Column(name="timestamp_unix")
-    private int timestampUnix;
+    private Integer timestampUnix;
 
     @Column(name="id__user_create")
-    private String idUserCreate;
+    private UUID idUserCreate;
 
     @Column(name="name")
     private String name;
@@ -30,11 +30,7 @@ public class PodEntity {
     @JsonProperty(value="isPublic")
     @Column(name="is_public")
     private boolean isPublic;
-
-    @JsonProperty(value="isRequireApproveRequestToJoin")
-    @Column(name="is_require_approve_request_to_join")
-    private boolean isRequireApproveRequestToJoin;
-
-    @Column(name="image")
-    private String image;
+    
+    @Column(name="id__imageKey")
+    private UUID idImageKey;
 }

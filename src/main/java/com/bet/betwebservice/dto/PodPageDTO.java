@@ -15,6 +15,5 @@ public class PodPageDTO {
     private UUID id;
     private String name;
     private String description;
-    private String image;
-    private int numberOfMembers;
+    private UUID idImageKey;
 }

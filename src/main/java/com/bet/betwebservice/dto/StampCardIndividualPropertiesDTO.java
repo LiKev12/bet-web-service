@@ -1,5 +1,6 @@
 package com.bet.betwebservice.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
@@ -10,11 +11,10 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 @Entity
-public class StampCardDTO {
+public class StampCardIndividualPropertiesDTO {
+
     @Id
     private UUID id;
-    private String name;
-    private String description;
-    private String image;
-    private int numberOfUsersCollect;
+    @JsonProperty(value="isCollect")
+    private boolean isCollect;
 }

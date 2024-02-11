@@ -5,6 +5,8 @@ import lombok.Data;
 
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 @Entity
 @Table(name="task")
 @Data
@@ -15,7 +17,7 @@ public class TaskEntity {
     private UUID id;
 
     @Column(name="timestamp_unix")
-    private int timestampUnix;
+    private Integer timestampUnix;
 
     @Column(name="id__user_create")
     private UUID idUserCreate;
@@ -26,18 +28,22 @@ public class TaskEntity {
     @Column(name="description")
     private String description;
 
-    @Column(name="image")
-    private String image;
+    @Column(name="id__image_key")
+    private UUID idImageKey;
 
     @Column(name="number_of_points")
-    private int numberOfPoints;
+    private Integer numberOfPoints;
 
     @Column(name="timestamp_update")
-    private int timestampUpdate;
+    private Integer timestampUpdate;
 
-    @Column(name="timestamp_target")
-    private int timestampTarget;
+    @Column(name="datetime_target")
+    private String datetimeTarget;
 
     @Column(name="id__pod")
     private UUID idPod;
+
+    @JsonProperty(value="isArchived")
+    @Column(name="is_archived")
+    private boolean isArchived;
 }

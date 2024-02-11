@@ -15,7 +15,7 @@ public class TaskUserTaskStarEntity {
     private UUID id;
 
     @Column(name="timestamp_unix")
-    private int timestampUnix;
+    private Integer timestampUnix;
 
     @Column(name="id__task")
     private UUID idTask;

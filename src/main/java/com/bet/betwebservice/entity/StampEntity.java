@@ -15,10 +15,10 @@ public class StampEntity {
     private UUID id;
 
     @Column(name="timestamp_unix")
-    private int timestampUnix;
+    private Integer timestampUnix;
 
     @Column(name="id__user_create")
-    private String idUserCreate;
+    private UUID idUserCreate;
 
     @Column(name="name")
     private String name;
@@ -26,6 +26,6 @@ public class StampEntity {
     @Column(name="description")
     private String description;
 
-    @Column(name="image")
-    private String image;
+    @Column(name="id__image_key")
+    private UUID idImageKey;
 }

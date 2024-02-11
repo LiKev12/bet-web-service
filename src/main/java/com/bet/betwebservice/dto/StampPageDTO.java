@@ -15,5 +15,5 @@ public class StampPageDTO {
     private UUID id;
     private String name;
     private String description;
-    private String image;
+    private UUID idImageKey;
 }
