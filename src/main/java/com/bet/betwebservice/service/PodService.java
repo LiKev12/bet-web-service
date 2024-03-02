@@ -1,10 +1,10 @@
 package com.bet.betwebservice.service;
 
 import com.bet.betwebservice.common.*;
-import com.bet.betwebservice.dao.NotificationRepository;
-import com.bet.betwebservice.dao.PodRepository;
-import com.bet.betwebservice.dao.PodUserPodHasUserRepository;
-import com.bet.betwebservice.dao.UserRepository;
+import com.bet.betwebservice.dao.v1.NotificationRepository;
+import com.bet.betwebservice.dao.v1.PodRepository;
+import com.bet.betwebservice.dao.v1.PodUserPodHasUserRepository;
+import com.bet.betwebservice.dao.v1.UserRepository;
 import com.bet.betwebservice.dto.PodCardIndividualPropertiesDTO;
 import com.bet.betwebservice.dto.PodCardSharedPropertiesDTO;
 import com.bet.betwebservice.entity.PodEntity;

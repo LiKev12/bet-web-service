@@ -1,7 +1,7 @@
 package com.bet.betwebservice.service;
 
 import com.bet.betwebservice.common.*;
-import com.bet.betwebservice.dao.*;
+import com.bet.betwebservice.dao.v1.*;
 import com.bet.betwebservice.dto.StampCardIndividualPropertiesDTO;
 import com.bet.betwebservice.dto.StampCardSharedPropertiesDTO;
 import com.bet.betwebservice.entity.StampEntity;

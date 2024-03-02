@@ -1,7 +1,7 @@
 package com.bet.betwebservice.service;
 
 import com.bet.betwebservice.common.*;
-import com.bet.betwebservice.dao.*;
+import com.bet.betwebservice.dao.v1.*;
 import com.bet.betwebservice.dto.NumberOfPointsInTasksCompletedOverTimeVisualizationDTO;
 import com.bet.betwebservice.dto.TaskIndividualPropertiesDTO;
 import com.bet.betwebservice.dto.TaskSharedPropertiesDTO;

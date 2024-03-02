@@ -16,18 +16,7 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 @Builder
-public class UserModel {
-    private UUID id;
-    private Integer timestampUnix;
-    private String name;
-    private String username;
-    @JsonIgnore
-    private String password;
-    private String email;
-    private String bio;
-    private UUID idImageKey;
-    private String timeZone;
-    @JsonProperty(value="isPublic")
-    private boolean isPublic;
+public class AuthenticationModel {
+    private UUID idUser;
     private String jwtToken;
 }

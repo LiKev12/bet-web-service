@@ -45,5 +45,4 @@ public class UserEntity {
     @Column(name="is_public")
     private boolean isPublic;
 
-
 }

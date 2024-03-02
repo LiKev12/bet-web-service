@@ -41,9 +41,10 @@ public class UserController {
 
     @GetMapping("/read/personal/personalPage")
     public PersonalPageModel getPersonalPage(
-        @RequestParam String idUser
+        // @RequestParam String idUser
     ) throws Exception {
-        return this.userService.getPersonalPage(idUser);
+        // return this.userService.getPersonalPage(idUser);
+        return this.userService.getPersonalPage();
     }
 
     @PostMapping("/update/userPage")

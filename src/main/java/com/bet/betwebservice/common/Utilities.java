@@ -1,9 +1,12 @@
 package com.bet.betwebservice.common;
 
-import com.bet.betwebservice.dao.NotificationRepository;
-import com.bet.betwebservice.dao.UserRepository;
+import com.bet.betwebservice.dao.v1.NotificationRepository;
+import com.bet.betwebservice.dao.v1.UserRepository;
 import com.bet.betwebservice.entity.NotificationEntity;
 import com.bet.betwebservice.entity.UserEntity;
+import jakarta.mail.internet.MimeMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.AwsCredentials;
 import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider;
@@ -22,6 +25,7 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
+import java.util.Random;
 import java.util.UUID;
 
 public class Utilities {
@@ -108,5 +112,50 @@ public class Utilities {
         notification.setSeen(false);
         notification.setDismissed(false);
         notificationRepository.save(notification);
+    }
+
+    public static String generateForgotPasswordCode() {
+        String possibleCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < Constants.FORGOT_PASSWORD_SECRET_CODE_LENGTH_CHARACTERS; i++) {
+            Random random = new Random();
+            int idx = random.nextInt(possibleCharacters.length());
+            sb.append(possibleCharacters.charAt(idx));
+        }
+        return sb.toString();
+    }
+
+    public static void sendEmailForgotPasswordCode(
+        JavaMailSender javaMailSender,
+        String emailFromAddress,
+        String emailToAddress,
+        String forgotPasswordCode
+    ) throws Exception {
+        // https://www.youtube.com/watch?v=OdQ3GyBsdAA&t=5s&ab_channel=lambdaCode
+        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+        MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
+
+        mimeMessageHelper.setFrom(emailFromAddress);
+        mimeMessageHelper.setTo(emailToAddress);
+        mimeMessageHelper.setSubject(Constants.EMAIL_SUBJECT_FORGOT_PASSWORD);
+        mimeMessageHelper.setText(String.format("Your password recovery code is as follows. Please do not share with anyone: %s", forgotPasswordCode));
+        javaMailSender.send(mimeMessage);
+    }
+
+    public static void sendEmailForgottenUsername(
+        JavaMailSender javaMailSender,
+        String emailFromAddress,
+        String emailToAddress,
+        String forgottenUsername
+    ) throws Exception {
+        // https://www.youtube.com/watch?v=OdQ3GyBsdAA&t=5s&ab_channel=lambdaCode
+        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+        MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
+
+        mimeMessageHelper.setFrom(emailFromAddress);
+        mimeMessageHelper.setTo(emailToAddress);
+        mimeMessageHelper.setSubject(Constants.EMAIL_SUBJECT_FORGOT_USERNAME);
+        mimeMessageHelper.setText(String.format("Your username associated with this email address is: %s", forgottenUsername));
+        javaMailSender.send(mimeMessage);
     }
 }

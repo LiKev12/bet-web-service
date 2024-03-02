@@ -45,7 +45,6 @@ public class RequestBodyKeys {
     public static String UPDATE_USER_IMAGE = "imageAsBase64String";
 
     public static String UPDATE_POD_MEMBERSHIP_POD_ID = "idPod";
-    public static String UPDATE_POD_MEMBERSHIP_ROLE = "podRole";
 
     public static String SEND_JOIN_POD_INVITE_ID_USERS_RECEIVE_INVITE = "idUsersReceiveInvite";
     public static String SEND_JOIN_POD_INVITE_POD_ID = "idPod";

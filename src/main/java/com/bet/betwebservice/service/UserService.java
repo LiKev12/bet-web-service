@@ -1,22 +1,22 @@
 package com.bet.betwebservice.service;
 
+import com.bet.betwebservice.authentication.JwtTokenWrapper;
 import com.bet.betwebservice.common.*;
-import com.bet.betwebservice.dao.*;
+import com.bet.betwebservice.dao.v1.*;
 import com.bet.betwebservice.dto.NumberOfPointsInTasksCompletedOverTimeVisualizationDTO;
 import com.bet.betwebservice.entity.NotificationEntity;
 import com.bet.betwebservice.entity.UserEntity;
 import com.bet.betwebservice.entity.UserUserUser1FollowUser2Entity;
-import com.bet.betwebservice.exceptions.AppException;
-import com.bet.betwebservice.model.*;
+import com.bet.betwebservice.model.NotificationModel;
+import com.bet.betwebservice.model.PersonalPageModel;
+import com.bet.betwebservice.model.UserBubbleModel;
+import com.bet.betwebservice.model.UserPageModel;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import software.amazon.awssdk.core.sync.RequestBody;
 
-import java.nio.CharBuffer;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -35,22 +35,20 @@ public class UserService {
     private NotificationRepository notificationRepository;
 
     @Autowired
-    private final PasswordEncoder passwordEncoder;
+    private JwtTokenWrapper jwtTokenWrapper;
 
     public UserService(
-        UserRepository userRepository, 
+        UserRepository userRepository,
         TaskRepository taskRepository, 
         PodRepository podRepository,
         UserUserUser1FollowUser2Repository userUserUser1FollowUser2Repository,
-        NotificationRepository notificationRepository,
-        PasswordEncoder passwordEncoder
+        NotificationRepository notificationRepository
     ) {
         this.userRepository = userRepository;
         this.taskRepository = taskRepository;
         this.podRepository = podRepository;
         this.userUserUser1FollowUser2Repository = userUserUser1FollowUser2Repository;
         this.notificationRepository = notificationRepository;
-        this.passwordEncoder = passwordEncoder;
     }
 
     public UserPageModel getUserPage(
@@ -86,8 +84,10 @@ public class UserService {
     }
 
     public PersonalPageModel getPersonalPage(
-        String idUser
+        // String idUser
     ) throws Exception {
+        // test:
+        String idUser = jwtTokenWrapper.getJwtTokenSubject();
         Optional<UserEntity> userEntityOptional = this.userRepository.findById(UUID.fromString(idUser));
         if (!userEntityOptional.isPresent()) {
             throw new Exception("Error: invalid input");
@@ -516,40 +516,6 @@ public class UserService {
         NotificationEntity notificationEntity = this.notificationRepository.findById(UUID.fromString(idNotification)).get();
         notificationEntity.setDismissed(true);
         this.notificationRepository.save(notificationEntity);
-    }
-
-    // auth stuff
-    public UserEntity findByUsername(String login) {
-        return this.userRepository.findByUsername(login).orElseThrow(() -> new AppException("Unknown user", HttpStatus.NOT_FOUND));
-    }
-
-    public UserModel login(JsonNode requestBody) {
-        UserEntity userEntity = this.userRepository.findByUsername(requestBody.get("username").asText()).orElseThrow(() -> new AppException("Unknown user", HttpStatus.NOT_FOUND));
-        if (passwordEncoder.matches(CharBuffer.wrap(requestBody.get("password").asText()), userEntity.getPassword())) {
-            return UserModel.builder()
-                .username(userEntity.getUsername())
-                .password(userEntity.getPassword())
-                .build();
-        }
-        throw new AppException("Invalid password", HttpStatus.BAD_REQUEST);
-    }
-
-    public UserModel register(JsonNode requestBody) {
-        Optional<UserEntity> optionalUserEntity = this.userRepository.findByUsername(requestBody.get("username").asText());
-        if (optionalUserEntity.isPresent()) {
-            throw new AppException("Login already exists", HttpStatus.BAD_REQUEST);
-        }
-        UserEntity userEntity = new UserEntity();
-        userEntity.setTimestampUnix((int) Instant.now().getEpochSecond());
-        userEntity.setUsername(requestBody.get("username").asText());
-        userEntity.setPassword(passwordEncoder.encode(CharBuffer.wrap(requestBody.get("password").asText())));
-        userEntity.setEmail(requestBody.get("email").asText());
-        userEntity.setName(requestBody.get("name").asText());
-        this.userRepository.save(userEntity);
-        return UserModel.builder()
-            .username(userEntity.getUsername())
-            .password(userEntity.getPassword())
-            .build();
     }
 }
 
