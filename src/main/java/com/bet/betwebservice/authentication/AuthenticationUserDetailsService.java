@@ -1,6 +1,6 @@
 package com.bet.betwebservice.authentication;
 
-import com.bet.betwebservice.dao.v1.UserRepository;
+import com.bet.betwebservice.dao.UserRepository;
 import com.bet.betwebservice.entity.UserEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

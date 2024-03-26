@@ -32,4 +32,8 @@ public class Limits {
     public static int USER_NAME_MAX_LENGTH_CHARACTERS = 50;
     public static int USER_BIO_MIN_LENGTH_CHARACTERS = 1;
     public static int USER_BIO_MAX_LENGTH_CHARACTERS = 1000;
+
+    public static int LIMIT_NUMBER_OF_INCOMPLETE_TASKS_PERSONAL = 1000;
+    public static int LIMIT_NUMBER_OF_TOTAL_TASKS_POD = 1000;
+    public static int LIMIT_NUMBER_OF_TOTAL_TASKS_STAMP = 1000;
 }

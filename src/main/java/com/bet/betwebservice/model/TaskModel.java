@@ -34,4 +34,6 @@ public class TaskModel {
     private int userBubblesTaskCompleteTotalNumber;
     @JsonProperty(value="isMemberOfTaskPod")
     private boolean isMemberOfTaskPod;
+    @JsonProperty(value="isTaskPodPrivate")
+    private boolean isTaskPodPrivate;
 }

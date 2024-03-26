@@ -31,6 +31,6 @@ public class PodEntity {
     @Column(name="is_public")
     private boolean isPublic;
     
-    @Column(name="id__imageKey")
+    @Column(name="id__image_key")
     private UUID idImageKey;
 }

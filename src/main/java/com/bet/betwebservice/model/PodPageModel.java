@@ -17,12 +17,16 @@ public class PodPageModel {
     private String name;
     private String description;
     private String imageLink;
+    @JsonProperty(value="isPublic")
+    private boolean isPublic;
     @JsonProperty(value="isPodMember")
     private boolean isPodMember;
     @JsonProperty(value="isPodModerator")
     private boolean isPodModerator;
     @JsonProperty(value="isSentBecomePodModeratorRequest")
     private boolean isSentBecomePodModeratorRequest;
+    @JsonProperty(value="isReachedNumberOfTasksLimit")
+    private boolean isReachedNumberOfTasksLimit;
     private int numberOfPendingBecomeModeratorRequests;
     private List<UserBubbleModel> userBubblesPodMember;
     private int userBubblesPodMemberTotalNumber;

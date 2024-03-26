@@ -2,13 +2,13 @@ package com.bet.betwebservice.service;
 
 import com.bet.betwebservice.authentication.JwtTokenService;
 import com.bet.betwebservice.common.*;
-import com.bet.betwebservice.dao.v1.ForgotPasswordCodeRepository;
-import com.bet.betwebservice.dao.v1.UserRepository;
+import com.bet.betwebservice.config.ApplicationConfiguration;
+import com.bet.betwebservice.dao.ForgotPasswordCodeRepository;
+import com.bet.betwebservice.dao.UserRepository;
 import com.bet.betwebservice.entity.ForgotPasswordCodeEntity;
 import com.bet.betwebservice.entity.UserEntity;
 import com.bet.betwebservice.model.AuthenticationModel;
 import com.fasterxml.jackson.databind.JsonNode;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -33,9 +33,8 @@ public class AuthenticationService {
     private JwtTokenService jwtTokenService;
     private JwtDecoder jwtDecoder;
     private JavaMailSender javaMailSender;
-
-    @Value("${spring.mail.username}")
-    private String emailFromAddress;
+    private ApplicationConfiguration applicationConfiguration;
+    private Utilities utilities;
 
     public AuthenticationService(
         UserRepository userRepository,
@@ -44,7 +43,9 @@ public class AuthenticationService {
         AuthenticationManager authenticationManager,
         JwtTokenService jwtTokenService,
         JwtDecoder jwtDecoder,
-        JavaMailSender javaMailSender
+        JavaMailSender javaMailSender,
+        ApplicationConfiguration applicationConfiguration,
+        Utilities utilities
     ) {
         this.userRepository = userRepository;
         this.forgotPasswordCodeRepository = forgotPasswordCodeRepository;
@@ -53,10 +54,12 @@ public class AuthenticationService {
         this.jwtTokenService = jwtTokenService;
         this.jwtDecoder = jwtDecoder;
         this.javaMailSender = javaMailSender;
+        this.applicationConfiguration = applicationConfiguration;
+        this.utilities = utilities;
     }
 
     public AuthenticationModel register(JsonNode rb) throws Exception {
-        RequestBodyValidatorV2.verifyRequiredFieldNamesExist(
+        RequestBodyValidator.verifyRequiredFieldNamesExist(
                 rb,
                 Arrays.asList(
                         "username",
@@ -65,24 +68,24 @@ public class AuthenticationService {
                         "timeZone",
                         "password",
                         "passwordConfirmed"));
-        String username = RequestBodyValidatorV2.stringRegex(
-            RequestBodyValidatorV2.stringRequired(
-                RequestBodyFormatterV2.fString(rb.get("username")), 
+        String username = RequestBodyValidator.stringRegex(
+            RequestBodyValidator.stringRequired(
+                RequestBodyFormatter.fString(rb.get("username")), 
                 Limits.USER_USERNAME_MIN_LENGTH_CHARACTERS, 
                 Limits.USER_USERNAME_MAX_LENGTH_CHARACTERS
             ), 
             Constants.REGEX_USER_USERNAME
         );
-        String name = RequestBodyFormatterV2.fString(rb.get("name"));
-        String email = RequestBodyValidatorV2.email(RequestBodyFormatterV2.fString(rb.get("email")));
-        String timeZone = RequestBodyValidatorV2.stringChoice(
-                RequestBodyFormatterV2.fString(rb.get("timeZone")), Constants.TIME_ZONE_CHOICES);
-        String password = RequestBodyValidatorV2.stringRequired(
-            RequestBodyFormatterV2.fString(rb.get("password")), 
+        String name = RequestBodyFormatter.fString(rb.get("name"));
+        String email = RequestBodyValidator.email(RequestBodyFormatter.fString(rb.get("email")));
+        String timeZone = RequestBodyValidator.stringChoice(
+                RequestBodyFormatter.fString(rb.get("timeZone")), Constants.TIME_ZONE_CHOICES);
+        String password = RequestBodyValidator.stringRequired(
+            RequestBodyFormatter.fString(rb.get("password")), 
             Limits.USER_PASSWORD_MIN_LENGTH_CHARACTERS, 
             Limits.USER_PASSWORD_MAX_LENGTH_CHARACTERS
         );
-        String passwordConfirmed = RequestBodyFormatterV2.fString(rb.get("passwordConfirmed"));
+        String passwordConfirmed = RequestBodyFormatter.fString(rb.get("passwordConfirmed"));
         if (!password.equals(passwordConfirmed)) {
             throw new Error("PASSWORDS_DO_NOT_MATCH");
         }
@@ -116,22 +119,22 @@ public class AuthenticationService {
     }
 
     public AuthenticationModel login(JsonNode rb) throws Exception {
-        RequestBodyValidatorV2.verifyRequiredFieldNamesExist(
+        RequestBodyValidator.verifyRequiredFieldNamesExist(
                 rb,
                 Arrays.asList(
                         "username",
                         "password"
         ));
-        String userUsername = RequestBodyValidatorV2.stringRegex(
-            RequestBodyValidatorV2.stringRequired(
-                RequestBodyFormatterV2.fString(rb.get("username")), 
+        String userUsername = RequestBodyValidator.stringRegex(
+            RequestBodyValidator.stringRequired(
+                RequestBodyFormatter.fString(rb.get("username")), 
                 Limits.USER_USERNAME_MIN_LENGTH_CHARACTERS, 
                 Limits.USER_USERNAME_MAX_LENGTH_CHARACTERS
             ), 
             Constants.REGEX_USER_USERNAME
         );
-        String userPassword = RequestBodyValidatorV2.stringRequired(
-            RequestBodyFormatterV2.fString(rb.get("password")), 
+        String userPassword = RequestBodyValidator.stringRequired(
+            RequestBodyFormatter.fString(rb.get("password")), 
             Limits.USER_PASSWORD_MIN_LENGTH_CHARACTERS, 
             Limits.USER_PASSWORD_MAX_LENGTH_CHARACTERS
         );
@@ -160,15 +163,15 @@ public class AuthenticationService {
      * email
      */
     public void getForgotPasswordCode(JsonNode rb) throws Exception {
-        String username = RequestBodyValidatorV2.stringRegex(
-            RequestBodyValidatorV2.stringRequired(
-                RequestBodyFormatterV2.fString(rb.get("username")), 
+        String username = RequestBodyValidator.stringRegex(
+            RequestBodyValidator.stringRequired(
+                RequestBodyFormatter.fString(rb.get("username")), 
                 Limits.USER_USERNAME_MIN_LENGTH_CHARACTERS, 
                 Limits.USER_USERNAME_MAX_LENGTH_CHARACTERS
             ), 
             Constants.REGEX_USER_USERNAME
         );
-        String email = RequestBodyValidatorV2.email(RequestBodyFormatterV2.fString(rb.get("email")));
+        String email = RequestBodyValidator.email(RequestBodyFormatter.fString(rb.get("email")));
         boolean isUsernameEmailCombinationExists = 
             this.userRepository.findByUsername(username).isPresent() && 
             this.userRepository.findByUsername(username).get().getEmail().equals(email);
@@ -182,15 +185,15 @@ public class AuthenticationService {
         if (isRecentlySentForgotPasswordCode) {
             throw new Exception("ALREADY_SENT_FORGOT_PASSWORD_CODE");
         }
-        String secretCode = Utilities.generateForgotPasswordCode();
+        String secretCode = utilities.generateForgotPasswordCode();
         ForgotPasswordCodeEntity forgotPasswordCodeEntity = new ForgotPasswordCodeEntity();
         forgotPasswordCodeEntity.setTimestampUnix((int) Instant.now().getEpochSecond());
         forgotPasswordCodeEntity.setIdUser(userEntity.getId());
         forgotPasswordCodeEntity.setSecretCode(secretCode);
         this.forgotPasswordCodeRepository.save(forgotPasswordCodeEntity);
-        Utilities.sendEmailForgotPasswordCode(
+        utilities.sendEmailForgotPasswordCode(
             javaMailSender,
-            emailFromAddress,
+            applicationConfiguration.getAwsSecret().getSpringMailUsername(),
             email,
             secretCode
         );
@@ -203,10 +206,10 @@ public class AuthenticationService {
      * newPasswordConfirmed
      */
     public void resetPassword(JsonNode rb) throws Exception {
-        String secretCode = RequestBodyFormatterV2.fString(rb.get("secretCode"));
-        String username = RequestBodyValidatorV2.stringRegex(
-            RequestBodyValidatorV2.stringRequired(
-                RequestBodyFormatterV2.fString(rb.get("username")), 
+        String secretCode = RequestBodyFormatter.fString(rb.get("secretCode"));
+        String username = RequestBodyValidator.stringRegex(
+            RequestBodyValidator.stringRequired(
+                RequestBodyFormatter.fString(rb.get("username")), 
                 Limits.USER_USERNAME_MIN_LENGTH_CHARACTERS, 
                 Limits.USER_USERNAME_MAX_LENGTH_CHARACTERS
             ), 
@@ -217,12 +220,12 @@ public class AuthenticationService {
         if (!secretCode.equals(forgotPasswordCodeEntity.getSecretCode())) {
             throw new Exception("INCORRECT_SECRET_CODE");
         }
-        String newPassword = RequestBodyValidatorV2.stringRequired(
-            RequestBodyFormatterV2.fString(rb.get("newPassword")), 
+        String newPassword = RequestBodyValidator.stringRequired(
+            RequestBodyFormatter.fString(rb.get("newPassword")), 
             Limits.USER_PASSWORD_MIN_LENGTH_CHARACTERS, 
             Limits.USER_PASSWORD_MAX_LENGTH_CHARACTERS
         );
-        String newPasswordConfirmed = RequestBodyFormatterV2.fString(rb.get("newPasswordConfirmed"));
+        String newPasswordConfirmed = RequestBodyFormatter.fString(rb.get("newPasswordConfirmed"));
         if (!newPassword.equals(newPasswordConfirmed)) {
             throw new Error("PASSWORDS_DO_NOT_MATCH");
         }
@@ -235,16 +238,16 @@ public class AuthenticationService {
      * email
      */
     public void getForgottenUsername(JsonNode rb) throws Exception {
-        String email = RequestBodyValidatorV2.email(RequestBodyFormatterV2.fString(rb.get("email")));
+        String email = RequestBodyValidator.email(RequestBodyFormatter.fString(rb.get("email")));
         boolean isUserWithSpecifiedEmailExists = this.userRepository.findByEmail(email).isPresent();
         if (!isUserWithSpecifiedEmailExists) {
             throw new Exception("NO_USER_WITH_SPECIFIED_EMAIL");
         }
         UserEntity userEntity = this.userRepository.findByEmail(email).get();
         String username = userEntity.getUsername();
-        Utilities.sendEmailForgottenUsername(
+        utilities.sendEmailForgottenUsername(
             javaMailSender,
-            emailFromAddress,
+            applicationConfiguration.getAwsSecret().getSpringMailUsername(),
             email,
             username
         );

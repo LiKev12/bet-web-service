@@ -9,6 +9,7 @@ import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -57,10 +58,10 @@ public class SecurityConfiguration {
         http
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> {
-                // auth.requestMatchers("api/auth/**").permitAll();
-                // auth.requestMatchers("api/user/**").hasRole("USER");
-                // auth.anyRequest().authenticated();
-                auth.anyRequest().permitAll();
+                // https://docs.spring.io/spring-security/reference/servlet/authorization/authorize-http-requests.html
+                auth.requestMatchers(HttpMethod.POST, "api/auth/**").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/actuator").permitAll()
+                    .anyRequest().authenticated();
             });
             
         http.oauth2ResourceServer((oauth2) -> oauth2

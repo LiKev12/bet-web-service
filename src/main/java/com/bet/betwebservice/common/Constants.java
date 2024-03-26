@@ -28,7 +28,7 @@ public class Constants {
     public static int STAMP_DESCRIPTION_MIN_LENGTH_CHARACTERS = 1;
     public static int STAMP_DESCRIPTION_MAX_LENGTH_CHARACTERS = 1000;
 
-    public static String S3_BUCKET_NAME_ALPHA = "bet-app-io-alpha";
+    // public static String S3_BUCKET_NAME = "bet-app-io-alpha"; // legacy
     public static String S3_FOLDER_NAME_TASK_IMAGE = "task-image";
     public static String S3_FOLDER_NAME_TASK_NOTE_IMAGE = "task-note-image";
     public static String S3_FOLDER_NAME_TASK_COMMENT_IMAGE = "task-comment-image";
@@ -36,8 +36,7 @@ public class Constants {
     public static String S3_FOLDER_NAME_POD_IMAGE = "pod-image";
     public static String S3_FOLDER_NAME_STAMP_IMAGE = "stamp-image";
     public static String S3_FOLDER_NAME_USER_IMAGE = "user-image";
-    public static String S3_BUCKET_ALPHA_ACCESS_KEY = "AKIAXCSRXEVRKDS4NPHR";
-    public static String S3_BUCKET_ALPHA_SECRET_ACCESS_KEY = "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";
+
 
     public static String NOTIFICATION_TYPE_SENT_YOU_JOIN_POD_INVITE = "NOTIFICATION_TYPE_SENT_YOU_JOIN_POD_INVITE";
     public static String NOTIFICATION_TYPE_APPROVED_YOUR_BECOME_POD_MODERATOR_REQUEST = "NOTIFICATION_TYPE_APPROVED_YOUR_BECOME_POD_MODERATOR_REQUEST";
@@ -662,7 +661,15 @@ public class Constants {
         )
     );
     
-    public static String REGEX_USER_USERNAME = "^[a-zA-Z0-9_]+$";
+    /**
+     * tried this but didn't work: https://stackoverflow.com/questions/32543090/instagram-username-regex-php
+     * https://www.regexplanet.com/advanced/java/index.html
+     */
+    // public static String REGEX_USER_USERNAME = "^[a-z0-9](?!.*?\.{2})[a-z0-9.]{1,28}[a-z0-9]$";
+    // public static String REGEX_USER_USERNAME = "^[a-zA-Z_](?!.*?\\.{2})[\\w.]{1,28}[\\w]$"; // works
+    public static String REGEX_USER_USERNAME = "^[a-z_](?!.*?\\.{2})[[a-z0-9_].]{1,28}[a-z0-9_]$"; // ideal if it works, update: it works!
+    // public static String REGEX_USER_USERNAME = "^[a-z0-9_\\.]+$";
+
     public static int FORGOT_PASSWORD_SECRET_CODE_LENGTH_CHARACTERS = 8;
     public static int FORGOT_PASSWORD_SECRET_CODE_WAIT_DURATION_SECONDS = 300;
 

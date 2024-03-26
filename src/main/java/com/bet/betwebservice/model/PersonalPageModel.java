@@ -16,4 +16,6 @@ public class PersonalPageModel {
     private String username;
     private String imageLink;
     private int numberOfPointsTaskCompleteToday;
+    @JsonProperty(value="isReachedNumberOfTasksLimit")
+    private boolean isReachedNumberOfTasksLimit;
 }
