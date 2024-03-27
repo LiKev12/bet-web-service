@@ -62,9 +62,11 @@ public class SecurityConfiguration {
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> {
                 // https://docs.spring.io/spring-security/reference/servlet/authorization/authorize-http-requests.html
-                auth.requestMatchers(HttpMethod.POST, "api/auth/**").permitAll()
-                    .requestMatchers(HttpMethod.GET, "/actuator").permitAll()
-                    .anyRequest().authenticated();
+                auth
+                    // .requestMatchers(HttpMethod.POST, "api/auth/**").permitAll()
+                    // .requestMatchers(HttpMethod.GET, "/actuator").permitAll()
+                    // .anyRequest().authenticated();
+                    .anyRequest().permitAll();
             });
             
         http.oauth2ResourceServer((oauth2) -> oauth2
