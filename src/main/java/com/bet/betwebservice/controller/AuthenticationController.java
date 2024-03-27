@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin("http://localhost:3000")
+@CrossOrigin("${service.client}")
 @RestController
 @RequestMapping("api/auth")
 public class AuthenticationController {

@@ -28,6 +28,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.util.List;
 
@@ -35,6 +36,8 @@ import java.util.List;
 public class SecurityConfiguration {
 
     private final RSAKeyProperties keys;
+    @Value("${service.client}")
+    private String serviceClient;
 
     public SecurityConfiguration(RSAKeyProperties keys){
         this.keys = keys;
@@ -99,7 +102,7 @@ public class SecurityConfiguration {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.setAllowedOrigins(List.of("http://localhost:3000")); // TODO: move localhost out to configured property
+        corsConfiguration.setAllowedOrigins(List.of(serviceClient));
         corsConfiguration.setAllowedMethods(List.of("GET", "POST"));
         corsConfiguration.setAllowCredentials(true);
         corsConfiguration.setAllowedHeaders(List.of("*"));
