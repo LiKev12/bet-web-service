@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@CrossOrigin(origins = "${service.client}", allowedHeaders = "*")
+// @CrossOrigin(origins = "${service.client}", allowedHeaders = "*")
 @RestController
 @RequestMapping("api/app")
 public class AppController {

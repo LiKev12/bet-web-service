@@ -1,15 +1,16 @@
 package com.bet.betwebservice.config;
 
 import com.bet.betwebservice.authentication.RSAKeyProperties;
+import com.bet.betwebservice.common.CustomizedCommonsRequestLoggingFilter;
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -28,8 +29,8 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.beans.factory.annotation.Value;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Configuration
@@ -63,10 +64,10 @@ public class SecurityConfiguration {
             .authorizeHttpRequests(auth -> {
                 // https://docs.spring.io/spring-security/reference/servlet/authorization/authorize-http-requests.html
                 auth
-                    // .requestMatchers(HttpMethod.POST, "api/auth/**").permitAll()
-                    // .requestMatchers(HttpMethod.GET, "/actuator").permitAll()
-                    // .anyRequest().authenticated();
-                    .anyRequest().permitAll();
+                    .requestMatchers(HttpMethod.POST, "api/auth/**").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/actuator").permitAll()
+                    .anyRequest().authenticated();
+                    // .anyRequest().permitAll();
             });
             
         http.oauth2ResourceServer((oauth2) -> oauth2
@@ -104,14 +105,25 @@ public class SecurityConfiguration {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.setAllowedOrigins(List.of(serviceClient));
-        corsConfiguration.setAllowedMethods(List.of("GET", "POST"));
+        // corsConfiguration.setAllowedOrigins(Arrays.asList(serviceClient)); // TODO: original
+        corsConfiguration.setAllowedOriginPatterns(Arrays.asList("*"));
+        corsConfiguration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         corsConfiguration.setAllowCredentials(true);
         corsConfiguration.setAllowedHeaders(List.of("*"));
         corsConfiguration.setMaxAge(3600L);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", corsConfiguration);
         return source;
+    }
+
+    @Bean
+    public CustomizedCommonsRequestLoggingFilter requestLoggingFilter() {
+        CustomizedCommonsRequestLoggingFilter loggingFilter = new CustomizedCommonsRequestLoggingFilter();
+        loggingFilter.setIncludeClientInfo(true);
+        loggingFilter.setIncludeQueryString(true);
+        loggingFilter.setIncludePayload(true);
+        loggingFilter.setMaxPayloadLength(64000);
+        return loggingFilter;
     }
     
 }

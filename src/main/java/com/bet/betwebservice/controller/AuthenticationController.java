@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin("${service.client}")
+// @CrossOrigin("${service.client}")
 @RestController
 @RequestMapping("api/auth")
 public class AuthenticationController {
