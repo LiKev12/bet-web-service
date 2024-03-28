@@ -13,6 +13,11 @@ public class CustomizedCommonsRequestLoggingFilter extends AbstractRequestLoggin
     }
 
     @Override
+    protected boolean shouldLog(HttpServletRequest httpServletRequest) {
+        return httpServletRequest.getRequestURI() != null && !httpServletRequest.equals("/actuator");
+    }
+
+    @Override
     protected void afterRequest(HttpServletRequest httpServletRequest, String message) {
 
     }
