@@ -1741,7 +1741,7 @@ public class AppService {
                     .parse(dateIteratorAsStringLineChartAggregateWeek, dtf_yyyyMMdd).plusWeeks(1).format(dtf_yyyyMMdd);
         }
 
-        // TODO: AGGREGATE MONTH (start same month, 1 year ago, on the 1st of the month)
+        // AGGREGATE MONTH (start same month, 1 year ago, on the 1st of the month)
         String dateIteratorAsStringLineChartAggregateMonth = LocalDate.of(
                 LocalDate.parse(dateEndAsString, dtf_yyyyMMdd).getYear() - 1,
                 LocalDate.parse(dateEndAsString, dtf_yyyyMMdd).getMonth().getValue(),

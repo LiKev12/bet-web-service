@@ -68,7 +68,6 @@ public class SecurityConfiguration {
                     .requestMatchers(HttpMethod.POST, "api/auth/**").permitAll()
                     .requestMatchers(HttpMethod.GET, "/actuator").permitAll()
                     .anyRequest().authenticated();
-                    // .anyRequest().permitAll();
             });
             
         http.oauth2ResourceServer((oauth2) -> oauth2
@@ -106,8 +105,8 @@ public class SecurityConfiguration {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
-        // corsConfiguration.setAllowedOrigins(Arrays.asList(serviceClient)); // TODO: original
-        corsConfiguration.setAllowedOriginPatterns(Arrays.asList("*"));
+        corsConfiguration.setAllowedOrigins(Arrays.asList(serviceClient)); 
+        // corsConfiguration.setAllowedOriginPatterns(Arrays.asList("*")); // TODO: delete if above works
         corsConfiguration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         corsConfiguration.setAllowCredentials(true);
         corsConfiguration.setAllowedHeaders(List.of("*"));
@@ -126,5 +125,4 @@ public class SecurityConfiguration {
         loggingFilter.setMaxPayloadLength(64000);
         return loggingFilter;
     }
-    
 }
