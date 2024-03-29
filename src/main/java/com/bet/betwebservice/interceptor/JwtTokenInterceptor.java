@@ -24,8 +24,6 @@ public class JwtTokenInterceptor implements HandlerInterceptor {
             HttpServletResponse response,
             Object handler
         ) throws Exception {
-        System.out.println("[COOKIES]");
-        System.out.println(request.getCookies());
         final String authorizationHeaderValue = request.getHeader("Authorization");
         if (authorizationHeaderValue != null && authorizationHeaderValue.startsWith("Bearer")) {
             String jwtToken = authorizationHeaderValue.substring(7, authorizationHeaderValue.length());
