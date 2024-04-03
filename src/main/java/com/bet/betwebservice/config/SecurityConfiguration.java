@@ -106,6 +106,7 @@ public class SecurityConfiguration {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         List<String> serviceClientOriginsList = Arrays.asList(serviceClientOrigins.split(","));
+        
         // System.out.println("[CORS]");
         // System.out.println(serviceClientOriginsList);
         // for (int i = 0; i < serviceClientOriginsList.size(); i++) {
