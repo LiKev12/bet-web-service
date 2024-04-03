@@ -106,7 +106,7 @@ public class SecurityConfiguration {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         List<String> serviceClientOriginsList = Arrays.asList(serviceClientOrigins.split(","));
-        
+
         // System.out.println("[CORS]");
         // System.out.println(serviceClientOriginsList);
         // for (int i = 0; i < serviceClientOriginsList.size(); i++) {
@@ -121,9 +121,9 @@ public class SecurityConfiguration {
         // the below three lines will add the relevant CORS response headers
         // https://stackoverflow.com/questions/51719889/spring-boot-cors-issue
         // corsConfiguration.addAllowedOrigin("*"); // doesn't work with allowCredentials=true
-        corsConfiguration.addAllowedOriginPattern("*");
-        corsConfiguration.addAllowedHeader("*");
-        corsConfiguration.addAllowedMethod("*");
+        // corsConfiguration.addAllowedOriginPattern("*");
+        // corsConfiguration.addAllowedHeader("*");
+        // corsConfiguration.addAllowedMethod("*");
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", corsConfiguration);
         return source;
