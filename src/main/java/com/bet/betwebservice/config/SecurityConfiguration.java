@@ -38,8 +38,9 @@ import java.util.List;
 public class SecurityConfiguration {
 
     private final RSAKeyProperties keys;
-    @Value("#{'${service.client.origins}'.split(',')}")
-    private List<String> serviceClientOrigins;
+
+    @Value("${service.client.origins}")
+    private String serviceClientOrigins;
 
     public SecurityConfiguration(RSAKeyProperties keys){
         this.keys = keys;
@@ -104,13 +105,14 @@ public class SecurityConfiguration {
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
-        System.out.println("[CORS]");
-        System.out.println(serviceClientOrigins);
-        for (int i = 0; i < serviceClientOrigins.size(); i++) {
-            System.out.println(serviceClientOrigins.get(i));
-        }
+        List<String> serviceClientOriginsList = Arrays.asList(serviceClientOrigins.split(","));
+        // System.out.println("[CORS]");
+        // System.out.println(serviceClientOriginsList);
+        // for (int i = 0; i < serviceClientOriginsList.size(); i++) {
+        //     System.out.println(serviceClientOriginsList.get(i));
+        // }
         CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.setAllowedOrigins(serviceClientOrigins);
+        corsConfiguration.setAllowedOrigins(serviceClientOriginsList);
         corsConfiguration.setAllowedMethods(Arrays.asList("GET", "POST"));
         corsConfiguration.setAllowCredentials(true);
         corsConfiguration.setAllowedHeaders(List.of("*"));
