@@ -668,7 +668,7 @@ public class Constants {
     // public static String REGEX_USER_USERNAME = "^[a-z0-9](?!.*?\.{2})[a-z0-9.]{1,28}[a-z0-9]$";
     // public static String REGEX_USER_USERNAME = "^[a-zA-Z_](?!.*?\\.{2})[\\w.]{1,28}[\\w]$"; // works
     public static String REGEX_USER_USERNAME = "^[a-z_](?!.*?\\.{2})[[a-z0-9_].]{1,28}[a-z0-9_]$"; // ideal if it works, update: it works!
-    // public static String REGEX_USER_USERNAME = "^[a-z0-9_\\.]+$";
+    // public static String REGEX_USER_USERNAME = "^[a-z0-9_\\.]+$"; // test commit
 
     public static int FORGOT_PASSWORD_SECRET_CODE_LENGTH_CHARACTERS = 8;
     public static int FORGOT_PASSWORD_SECRET_CODE_WAIT_DURATION_SECONDS = 300;
